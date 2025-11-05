@@ -70,17 +70,18 @@ CREATE TABLE virement(
    etat INTEGER,
    date_effective TIMESTAMP,
    id_change INTEGER NOT NULL,
-   id_utilisateur INTEGER,
    PRIMARY KEY(id_virement),
-   FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur),
    FOREIGN KEY(id_change) REFERENCES change(id_change)
 );
 
--- CREATE TABLE historique_virement(
---    id_historique_virement SERIAL,
-
---    PRIMARY KEY(id_historique_virement)
--- );
+CREATE TABLE historique_virement(
+   id_historique_virement SERIAL,
+   id_objet VARCHAR(50),
+   date_heure TIMESTAMP,
+   id_utilisateur INTEGER,
+   FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur),
+   PRIMARY KEY(id_historique_virement)
+);
 
 CREATE TABLE mouvement(
    id_mouvement SERIAL,

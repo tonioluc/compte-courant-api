@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 public class CompteController {
 
     @GetMapping
-    public String lele(){
-        return "io lelena a";
+    public String test(){
+        return "Mandeha";
     }
 }
