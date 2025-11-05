@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.time.LocalDateTime;
 
 import com.itu.bank.utils.Connexion;
+import com.itu.bank.utils.IdVirementGenerator;
 
 public class Compte {
     private int idCompte;
@@ -141,6 +142,7 @@ public class Compte {
         float montant = Float.parseFloat(montantStr);
 
         Virement virement = new Virement();
+        virement.setIdVirement(IdVirementGenerator.generateNewId());
         virement.setDateEffective(dateEffective);
         virement.setIdChange(idChange);
         virement.setIdCompteDestinataire(idCompteDestinataire);

@@ -16,8 +16,6 @@ public class Virement {
     private int idChange;
 
     public Virement() throws Exception{
-        // Génère un nouvel ID au format VRMT_1, VRMT_2, ...
-        this.idVirement = IdVirementGenerator.generateNewId();
     }
 
     public void setMontant(float montant) throws Exception {
@@ -106,7 +104,6 @@ public class Virement {
         } catch (Exception e) {
             throw new Exception("Erreur lors de l'enregistrement du virement : " + e.getMessage(), e);
         }
-
         return this;
     }
 
