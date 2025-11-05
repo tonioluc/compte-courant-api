@@ -1,0 +1,9 @@
+com/itu/bank/models/Virement.class
+com/itu/bank/models/Utilisateur.class
+com/itu/bank/utils/Connexion.class
+com/itu/bank/models/Change.class
+com/itu/bank/models/TypeMouvement.class
+com/itu/bank/controllers/CompteController.class
+com/itu/bank/BankApplication.class
+com/itu/bank/models/Compte.class
+com/itu/bank/models/Client.class

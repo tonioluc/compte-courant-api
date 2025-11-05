@@ -1,0 +1,39 @@
+package com.itu.bank.utils; // <-- adapte le package à ton projet
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+
+import commodels.Change;
+
+
+public class TestConnexion {
+
+    public static void main(String[] args) {
+        Connection con = null;
+
+        try {
+            // --- Tentative de connexion ---
+            con = Connexion.getConnexion();
+            System.out.println("✅ Connexion réussie à la base de données PostgreSQL.");
+            Change change = new Change(2);
+            change.getChangeByIdAndDate(con,LocalDateTime.now());
+            System.out.println("✅ Change récupéré :");
+            System.out.println("ID : " + change.getIdChange());
+            System.out.println("Devise : " + change.getDevise());
+            System.out.println("Date début : " + change.getDateDebut());
+            System.out.println("Date fin : " + change.getDateFin());
+            System.out.println("Montant : " + change.getMontant());
+        } catch (Exception e) {
+            System.err.println("❌ Erreur de connexion : " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                Connexion.deconnexion();
+                System.out.println("🔒 Connexion fermée avec succès.");
+            } catch (SQLException e) {
+                System.err.println("⚠️ Erreur lors de la fermeture : " + e.getMessage());
+            }
+        }
+    }
+}
