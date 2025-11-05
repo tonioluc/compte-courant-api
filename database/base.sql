@@ -89,6 +89,9 @@ CREATE TABLE mouvement(
    date_heure TIMESTAMP,
    source VARCHAR(50),
    id_type_mouvement INTEGER NOT NULL,
+   montant NUMERIC(15, 2),
+   id_compte INTEGER,
+   -- FOREIGN KEY (id_compte) REFERENCES compte(id_compte),
    PRIMARY KEY(id_mouvement),
    FOREIGN KEY(id_type_mouvement) REFERENCES type_mouvement(id_type_mouvement)
 );
@@ -109,4 +112,4 @@ CREATE TABLE validation_virement(
 CREATE VIEW v_virement_valider AS
 SELECT *
 FROM virement
-WHERE etat > 10;
+WHERE etat >= 11;

@@ -53,6 +53,6 @@ INSERT INTO compte(solde, plafond, id_type_compte, id_client) VALUES
 -- Insertions Frais pour Compte courant (id_frais SERIAL)
 -- -----------------------------
 INSERT INTO frais(montant_inf, montant_sup, frais_en_montant, frais_pourcentage, id_type_compte) VALUES
-(0, 500000, 2000, 0, 1),
-(500001, 2000000, 5000, 0, 1),
-(2000001, 10000000, 1000, 0.5, 1);  -- 0.5% sur les gros montants + 1000 frais en montant
+(0, 500000, 50, 0, 1),
+(500001, 2000000, 50, 0, 1),
+(2000001, 10000000, 500, 0.5, 1);  -- 0.5% sur les gros montants + 1000 frais en montant

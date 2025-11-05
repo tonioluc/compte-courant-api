@@ -6,6 +6,14 @@ import java.sql.ResultSet;
 
 public class IdVirementGenerator {
     private static int currentNumber = 0;
+    public static int getCurrentNumber() {
+        return currentNumber;
+    }
+
+    public static void setCurrentNumber(int currentNumber) {
+        IdVirementGenerator.currentNumber = currentNumber;
+    }
+
     private static boolean initialized = false;
 
     // --- Méthode d'initialisation : appelée une seule fois ---

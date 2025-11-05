@@ -56,7 +56,7 @@ public class Compte {
         this.idClient = idClient;
     }
 
-    public void getCompteById(Connection conn) throws Exception {
+    public Compte getCompteById(Connection conn) throws Exception {
         String query = "SELECT * from compte where id_compte = ?";
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setInt(1, this.idCompte);
@@ -73,6 +73,7 @@ public class Compte {
         }
         rs.close();
         stmt.close();
+        return this;
     }
 
     public boolean estAutoriserADebiter(float montant) {
@@ -115,7 +116,8 @@ public class Compte {
         change.getChangeByIdAndDate(conn, dateEffective);
         float montantMga = change.convertirEnAriary(montant);
         if (!this.estAutoriserADebiter(montantMga)) {
-            throw new Exception("Ce compte n'a pas du solde insuffisant pour effectuer ce virement. Solde : "+this.solde+" MGA ; Montant à virer : "+montantMga);
+            throw new Exception("Ce compte n'a pas du solde insuffisant pour effectuer ce virement. Solde : "
+                    + this.solde + " MGA ; Montant à virer : " + montantMga);
         }
         if (this.aAtteintPlafond(conn, dateEffective, montantMga)) {
             throw new Exception(
@@ -165,6 +167,7 @@ public class Compte {
             return virement;
         } catch (Exception e) {
             conn.rollback();
+            IdVirementGenerator.setCurrentNumber(IdVirementGenerator.getCurrentNumber() - 1);
             throw e;
         } finally {
             try {
@@ -174,4 +177,42 @@ public class Compte {
             }
         }
     }
+
+    public Compte merge(Connection conn) throws Exception {
+        if (conn == null || conn.isClosed()) {
+            throw new Exception("Connexion invalide ou fermée");
+        }
+
+        // Vérifie que l'idCompte est défini
+        if (this.idCompte <= 0) {
+            throw new Exception("idCompte invalide pour la mise à jour");
+        }
+
+        String sql = """
+                UPDATE compte
+                SET solde = ?,
+                    plafond = ?,
+                    id_type_compte = ?,
+                    id_client = ?
+                WHERE id_compte = ?
+                """;
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setFloat(1, this.solde);
+            pstmt.setFloat(2, this.plafond);
+            pstmt.setInt(3, this.idTypeCompte);
+            pstmt.setInt(4, this.idClient);
+            pstmt.setInt(5, this.idCompte);
+
+            int rows = pstmt.executeUpdate();
+            if (rows == 0) {
+                throw new Exception("Aucun compte trouvé avec id " + this.idCompte + " pour la mise à jour");
+            }
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de la mise à jour du compte : " + e.getMessage(), e);
+        }
+
+        return this;
+    }
+
 }
