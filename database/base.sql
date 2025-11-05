@@ -62,8 +62,7 @@ CREATE TABLE frais(
 );
 
 CREATE TABLE virement(
-   id_virement SERIAL,
-   id_objet VARCHAR(50) UNIQUE,
+   id_virement VARCHAR(50),
    id_compte_emetteur INTEGER,
    id_compte_destinataire INTEGER,
    montant NUMERIC(15, 2),
@@ -101,7 +100,7 @@ CREATE TABLE validation_virement(
    id_utilisateur INTEGER NOT NULL,
    PRIMARY KEY(id_validation_virement),
    UNIQUE(id_objet),
-   FOREIGN KEY(id_objet) REFERENCES virement(id_objet),
+   FOREIGN KEY(id_objet) REFERENCES virement(id_virement),
    FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
 );
 

@@ -149,7 +149,7 @@ public class Compte {
 
         HistoriqueVirement historiqueVirement = new HistoriqueVirement();
         historiqueVirement.setDateHeure(dateEffective);
-        historiqueVirement.setIdObjet(virement.getIdObjet());
+        historiqueVirement.setIdObjet(virement.getIdVirement());
         historiqueVirement.setIdUtilsateur(Integer.parseInt(idUtilisateurStr));
 
         Connection conn = null;
