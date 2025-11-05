@@ -26,6 +26,10 @@ public class Virement {
     private int idChange;
     private int idUtilisateur;
 
+    public Virement() {
+        this.idObjet = Virement.generateIdObjet();
+    }
+
     public int getIdUtilisateur() {
         return idUtilisateur;
     }
@@ -108,7 +112,6 @@ public class Virement {
             throw new Exception("Connexion invalide ou fermée");
         }
 
-        this.idObjet = Virement.generateIdObjet();
         this.etat = 1;
 
         String sql = """

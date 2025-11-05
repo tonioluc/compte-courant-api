@@ -1,4 +1,4 @@
-
+-- \i '/home/antonio/ITU/S5/mr-tahina/compte-courant-api/database/base.sql'
 \c postgres;
 drop database if exists bank;
 create database bank;
@@ -71,7 +71,9 @@ CREATE TABLE virement(
    date_effective TIMESTAMP,
    id_change INTEGER NOT NULL,
    PRIMARY KEY(id_virement),
-   FOREIGN KEY(id_change) REFERENCES change(id_change)
+   FOREIGN KEY(id_change) REFERENCES change(id_change),
+   FOREIGN KEY(id_compte_emetteur) REFERENCES compte(id_compte),
+   FOREIGN KEY(id_compte_destinataire) REFERENCES compte(id_compte)
 );
 
 CREATE TABLE historique_virement(

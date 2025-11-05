@@ -114,7 +114,7 @@ public class Compte {
         change.getChangeByIdAndDate(conn, dateEffective);
         float montantMga = change.convertirEnAriary(montant);
         if (!this.estAutoriserADebiter(montantMga)) {
-            throw new Exception("Ce compte n'a pas du solde insuffisant pour effectuer ce virement");
+            throw new Exception("Ce compte n'a pas du solde insuffisant pour effectuer ce virement. Solde : "+this.solde+" MGA ; Montant à virer : "+montantMga);
         }
         if (this.aAtteintPlafond(conn, dateEffective, montantMga)) {
             throw new Exception(
@@ -122,8 +122,19 @@ public class Compte {
         }
     }
 
-    public Virement virer(String idCompteDestinataireStr, String dateEffectiveStr, String idChangeStr,
-            String montantStr) throws Exception {
+    public Virement virer(String idCompteEmetteurStr, String idCompteDestinataireStr, String dateEffectiveStr,
+            String idChangeStr, String montantStr, String idUtilisateurStr) throws Exception {
+
+        // Affecteko ato amleh amleh objet appellant ity aloha le mombamombany rehetra
+        // avy any anaty base
+        int idCompteEmetteur = Integer.parseInt(idCompteEmetteurStr);
+        this.setIdCompte(idCompteEmetteur);
+        try (Connection conn = Connexion.getConnexion()) {
+            this.getCompteById(conn);
+        } catch (Exception e) {
+            throw e;
+        }
+
         int idCompteDestinataire = Integer.parseInt(idCompteDestinataireStr);
         LocalDateTime dateEffective = LocalDateTime.parse(dateEffectiveStr);
         int idChange = Integer.parseInt(idChangeStr);
@@ -136,12 +147,18 @@ public class Compte {
         virement.setIdCompteEmetteur(this.getIdCompte());
         virement.setMontant(montant);
 
+        HistoriqueVirement historiqueVirement = new HistoriqueVirement();
+        historiqueVirement.setDateHeure(dateEffective);
+        historiqueVirement.setIdObjet(virement.getIdObjet());
+        historiqueVirement.setIdUtilsateur(Integer.parseInt(idUtilisateurStr));
+
         Connection conn = null;
         try {
             conn = Connexion.getConnexion();
             conn.setAutoCommit(false);
             this.controlleComplexe(conn, dateEffective, idChange, montant);
             virement.save(conn);
+            historiqueVirement.save(conn);
             conn.commit();
             return virement;
         } catch (Exception e) {

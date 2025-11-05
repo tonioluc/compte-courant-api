@@ -46,7 +46,8 @@ INSERT INTO change(devise, date_debut, date_fin, montant) VALUES
 -- Ici, il faudra récupérer l'id_type_compte généré pour "Compte courant"
 -- Supposons que c'est 1 (auto-incrément)
 INSERT INTO compte(solde, plafond, id_type_compte, id_client) VALUES
-(0, 10000000, 1, 1);
+(1000, 10000000, 1, 1),
+(1000, 10000000, 1, 2);
 
 -- -----------------------------
 -- Insertions Frais pour Compte courant (id_frais SERIAL)
