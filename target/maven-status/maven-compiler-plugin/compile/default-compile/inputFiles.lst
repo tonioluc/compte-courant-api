@@ -1,9 +1,0 @@
-/home/antonio/ITU/S5/mr-tahina/compte-courant-api/src/main/java/com/itu/bank/models/Compte.java
-/home/antonio/ITU/S5/mr-tahina/compte-courant-api/src/main/java/com/itu/bank/BankApplication.java
-/home/antonio/ITU/S5/mr-tahina/compte-courant-api/src/main/java/com/itu/bank/models/Utilisateur.java
-/home/antonio/ITU/S5/mr-tahina/compte-courant-api/src/main/java/com/itu/bank/utils/Connexion.java
-/home/antonio/ITU/S5/mr-tahina/compte-courant-api/src/main/java/com/itu/bank/models/Change.java
-/home/antonio/ITU/S5/mr-tahina/compte-courant-api/src/main/java/com/itu/bank/models/TypeMouvement.java
-/home/antonio/ITU/S5/mr-tahina/compte-courant-api/src/main/java/com/itu/bank/controllers/CompteController.java
-/home/antonio/ITU/S5/mr-tahina/compte-courant-api/src/main/java/com/itu/bank/models/Client.java
-/home/antonio/ITU/S5/mr-tahina/compte-courant-api/src/main/java/com/itu/bank/models/Virement.java
