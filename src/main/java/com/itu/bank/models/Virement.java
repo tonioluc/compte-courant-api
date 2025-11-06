@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.itu.bank.utils.Connexion;
 
@@ -39,7 +41,10 @@ public class Virement {
         return idCompteEmetteur;
     }
 
-    public void setIdCompteEmetteur(int idCompteEmetteur) {
+    public void setIdCompteEmetteur(int idCompteEmetteur) throws Exception {
+        if (idCompteEmetteur == this.getIdCompteDestinataire()) {
+            throw new Exception("Un compte ne peut pas faire un virement vers la même compte.");
+        }
         this.idCompteEmetteur = idCompteEmetteur;
     }
 
@@ -47,7 +52,10 @@ public class Virement {
         return idCompteDestinataire;
     }
 
-    public void setIdCompteDestinataire(int idCompteDestinataire) {
+    public void setIdCompteDestinataire(int idCompteDestinataire) throws Exception{
+        if (idCompteDestinataire == this.getIdCompteEmetteur()) {
+            throw new Exception("Un compte ne peut pas faire un virement vers la même compte.");
+        }
         this.idCompteDestinataire = idCompteDestinataire;
     }
 
@@ -107,6 +115,42 @@ public class Virement {
             throw new Exception("Erreur lors de l'enregistrement du virement : " + e.getMessage(), e);
         }
         return this;
+    }
+
+    public static List<Virement> getAllVirementNonValider(Connection conn) throws Exception {
+        if (conn == null || conn.isClosed()) {
+            throw new Exception("Connexion invalide ou fermée");
+        }
+
+        List<Virement> virements = new ArrayList<>();
+        String sql = "SELECT * FROM virement where etat < 11 ORDER BY date_effective DESC";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Virement v = new Virement();
+                v.setIdVirement(rs.getString("id_virement"));
+                v.setIdCompteEmetteur(rs.getInt("id_compte_emetteur"));
+                v.setIdCompteDestinataire(rs.getInt("id_compte_destinataire"));
+                v.setMontant(rs.getFloat("montant"));
+                v.setEtat(rs.getInt("etat"));
+
+                Timestamp ts = rs.getTimestamp("date_effective");
+                if (ts != null) {
+                    v.setDateEffective(ts.toLocalDateTime());
+                }
+
+                v.setIdChange(rs.getInt("id_change"));
+
+                virements.add(v);
+            }
+
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de la récupération de tous les virements : " + e.getMessage(), e);
+        }
+
+        return virements;
     }
 
     public Frais calculFrais(Connection conn) throws Exception {
@@ -259,7 +303,8 @@ public class Virement {
             compteDestinataire.setIdCompte(this.idCompteDestinataire);
             compteDestinataire = compteDestinataire.getCompteById(conn);
 
-            compteEmetteur.controlleComplexe(conn, this.getDateEffective(), 1, this.getMontant()); // 1 le idChange satria efa MGA
+            compteEmetteur.controlleComplexe(conn, this.getDateEffective(), "MGA", this.getMontant()); // 1 le idChange
+                                                                                                   // satria efa MGA
 
             compteEmetteur.setSolde(compteEmetteur.getSolde() - this.getMontant());
             compteDestinataire.setSolde(compteDestinataire.getSolde() + this.getMontant() - totalFrais);

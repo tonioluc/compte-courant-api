@@ -25,7 +25,7 @@ public class CompteController {
             String idCompteEmetteur = body.get("idCompteEmetteur");
             String idCompteDestinataire = body.get("idCompteDestinataire");
             String dateEffective = body.get("dateEffective");
-            String idChange = body.get("idChange");
+            String devise = body.get("devise");
             String montant = body.get("montant");
             String idUtilisateur = body.get("idUtilisateur");
 
@@ -35,7 +35,7 @@ public class CompteController {
                     idCompteEmetteur,
                     idCompteDestinataire,
                     dateEffective,
-                    idChange,
+                    devise,
                     montant,
                     idUtilisateur
             );

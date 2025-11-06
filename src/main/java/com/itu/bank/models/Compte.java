@@ -110,10 +110,11 @@ public class Compte {
         return (sommeMontantDebiter + montantMga) >= this.getPlafond();
     }
 
-    public void controlleComplexe(Connection conn, LocalDateTime dateEffective, int idChange, float montant)
+    public void controlleComplexe(Connection conn, LocalDateTime dateEffective, String devise, float montant)
             throws Exception {
-        Change change = new Change(idChange);
-        change.getChangeByIdAndDate(conn, dateEffective);
+        Change change = new Change();
+        change.setDevise(devise);
+        change.getChangeByDeviseAndDate(conn, dateEffective);
         float montantMga = change.convertirEnAriary(montant);
         if (!this.estAutoriserADebiter(montantMga)) {
             throw new Exception("Ce compte n'a pas du solde insuffisant pour effectuer ce virement. Solde : "
@@ -126,29 +127,39 @@ public class Compte {
     }
 
     public Virement virer(String idCompteEmetteurStr, String idCompteDestinataireStr, String dateEffectiveStr,
-            String idChangeStr, String montantStr, String idUtilisateurStr) throws Exception {
+            String devise, String montantStr, String idUtilisateurStr) throws Exception {
 
         // Affecteko ato amleh amleh objet appellant ity aloha le mombamombany rehetra
         // avy any anaty base
         int idCompteEmetteur = Integer.parseInt(idCompteEmetteurStr);
         this.setIdCompte(idCompteEmetteur);
+        Change change = new Change();
+        change.setDevise(devise);
+
         try (Connection conn = Connexion.getConnexion()) {
             this.getCompteById(conn);
+            change.getChangeByDeviseAndDate(conn, LocalDateTime.parse(dateEffectiveStr));
         } catch (Exception e) {
             throw e;
         }
 
         int idCompteDestinataire = Integer.parseInt(idCompteDestinataireStr);
-        LocalDateTime dateEffective = LocalDateTime.parse(dateEffectiveStr);
-        int idChange = Integer.parseInt(idChangeStr);
+        LocalDateTime dateEffective = null;
+        if (dateEffectiveStr == null) {
+            dateEffective = LocalDateTime.now();
+        }else{
+            dateEffective = LocalDateTime.parse(dateEffectiveStr);
+        }
+        
+        // int idChange = Integer.parseInt(idChangeStr);
         float montant = Float.parseFloat(montantStr);
 
         Virement virement = new Virement();
         virement.setIdVirement(IdVirementGenerator.generateNewId());
         virement.setDateEffective(dateEffective);
-        virement.setIdChange(idChange);
-        virement.setIdCompteDestinataire(idCompteDestinataire);
+        virement.setIdChange(change.getIdChange());
         virement.setIdCompteEmetteur(this.getIdCompte());
+        virement.setIdCompteDestinataire(idCompteDestinataire);
         virement.setMontant(montant);
 
         HistoriqueVirement historiqueVirement = new HistoriqueVirement();
@@ -160,7 +171,7 @@ public class Compte {
         try {
             conn = Connexion.getConnexion();
             conn.setAutoCommit(false);
-            this.controlleComplexe(conn, dateEffective, idChange, montant);
+            this.controlleComplexe(conn, dateEffective, devise, montant);
             virement.save(conn);
             historiqueVirement.save(conn);
             conn.commit();

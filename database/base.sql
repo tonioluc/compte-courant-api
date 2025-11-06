@@ -1,4 +1,4 @@
--- \i '/home/antonio/ITU/S5/mr-tahina/compte-courant-api/database/base.sql'
+-- \i '/home/antonio/ITU/S5/mr-tahina/bank-tsotra/compte-courant-api/database/base.sql'
 \c postgres;
 drop database if exists bank;
 create database bank;
