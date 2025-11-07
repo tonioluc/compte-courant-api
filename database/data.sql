@@ -1,11 +1,11 @@
--- \i '/home/antonio/ITU/S5/mr-tahina/bank-tsotra/database/data.sql'
+-- \i '/home/antonio/ITU/S5/mr-tahina/bank-tsotra/compte-courant-api/database/data.sql'
 -- -----------------------------
 -- Insertions Utilisateurs
 -- -----------------------------
 INSERT INTO utilisateur(username, password) VALUES
-('admin', 'admin123'),
-('user1', 'pass1'),
-('user2', 'pass2');
+('admin', 'pass'),
+('user1', 'pass'),
+('user2', 'pass');
 
 -- -----------------------------
 -- Insertions Clients
@@ -35,9 +35,9 @@ INSERT INTO type_mouvement(libelle) VALUES
 -- Insertions Change (devise)
 -- -----------------------------
 INSERT INTO change(devise, date_debut, date_fin, montant) VALUES
-('MGA', '2025-01-01', '2025-12-31', 1),
-('EUR', '2025-01-01', '2025-12-31', 5000),
-('USD', '2025-01-01', '2025-12-31', 4500);
+('MGA', '2025-11-01', '2025-12-07', 1),
+('USD', '2025-11-06', '2025-11-06', 4500),
+('USD', '2025-11-07', '2025-11-07', 4550);
 
 -- -----------------------------
 -- Insertions Compte bancaire
@@ -46,13 +46,13 @@ INSERT INTO change(devise, date_debut, date_fin, montant) VALUES
 -- Ici, il faudra récupérer l'id_type_compte généré pour "Compte courant"
 -- Supposons que c'est 1 (auto-incrément)
 INSERT INTO compte(solde, plafond, id_type_compte, id_client) VALUES
-(1000, 10000000, 1, 1),
-(1000, 10000000, 1, 2);
+(3000000, 10000000, 1, 1),
+(3000000, 10000000, 1, 2);
 
 -- -----------------------------
 -- Insertions Frais pour Compte courant (id_frais SERIAL)
 -- -----------------------------
 INSERT INTO frais(montant_inf, montant_sup, frais_en_montant, frais_pourcentage, id_type_compte) VALUES
-(0, 500000, 50, 0, 1),
-(500001, 2000000, 50, 0, 1),
-(2000001, 10000000, 500, 0.5, 1);  -- 0.5% sur les gros montants + 1000 frais en montant
+(0, 500000, 20000, 5, 1),
+(500001, 2000000, 50000, 3, 1);
+

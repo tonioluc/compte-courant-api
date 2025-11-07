@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.cglib.core.Local;
+
 import com.itu.bank.utils.Connexion;
 
 public class Virement {
@@ -151,6 +153,16 @@ public class Virement {
         }
 
         return virements;
+    }
+
+    public float calculMontantAEnvoyer(Connection conn, String devise) throws Exception{
+        Change change = new Change();
+        // devise = "MGA";
+        change.setDevise(devise);
+        change.getChangeByDeviseAndDate(conn, LocalDateTime.now());
+        Frais frais = calculFrais(conn);
+
+        return (this.getMontant() + frais.getFraisEnMontant() + ((frais.getFraisPourcentage() * this.getMontant()) / 100)) / change.getMontant();
     }
 
     public Frais calculFrais(Connection conn) throws Exception {

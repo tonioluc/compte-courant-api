@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Connection;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,30 @@ public class VirementController {
     @GetMapping
     public String test() {
         return "Virement controller actif";
+    }
+
+    @CrossOrigin(origins = "http://localhost:8080")
+    @PostMapping("/calcul-montant")
+    public ResponseEntity<Float> calculMontant(@RequestBody Map<String, String> body) {
+        try (Connection conn = Connexion.getConnexion()) {
+            float montant = Float.parseFloat(body.get("montant"));
+            int idCompteEmetteur = Integer.parseInt(body.get("idCompteEmetteur"));
+            int idCompteDestinataire = Integer.parseInt(body.get("idCompteDestinataire"));
+            String devise = body.get("devise");
+            String date = body.get("date");
+
+            Virement virement = new Virement();
+            virement.setMontant(montant);
+            virement.setIdCompteEmetteur(idCompteEmetteur);
+            virement.setIdCompteDestinataire(idCompteDestinataire);
+
+            float montantTotal = virement.calculMontantAEnvoyer(conn , devise);
+            return ResponseEntity.ok(montantTotal);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // Endpoint pour valider un virement
